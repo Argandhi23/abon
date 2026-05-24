@@ -7,7 +7,7 @@ import { ShoppingCart, Star, ShieldCheck, Clock, Check } from "lucide-react";
 import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
-import gsap from "@/lib/gsap";
+import gsap, { ScrollTrigger } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {

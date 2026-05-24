@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -14,6 +14,23 @@ export default function HeroSection() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
+
+  const heroImages = [
+    "/image/abon_sapi_original.png",
+    "/image/abon_sapi_pedas.png",
+    "/image/abon_ayam_original.png",
+    "/image/abon_ikan_tuna.png",
+    "/image/abon_sapi_manis.png",
+    "/image/abon_ayam_pedas.png"
+  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -88,16 +105,18 @@ export default function HeroSection() {
           <div ref={imageRef} className="relative h-[400px] md:h-[600px] w-full mt-8 md:mt-0">
             <div className="absolute inset-0 bg-blue-200 rounded-3xl rotate-3 transform origin-bottom-left opacity-30"></div>
             <div className="absolute inset-0 bg-sky-200 rounded-3xl -rotate-2 transform origin-bottom-right opacity-30"></div>
-            <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-              <Image 
-                src="/image/hero.png" 
-                alt="Abon Nusantara Premium" 
-                fill 
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                loading="eager"
-              />
+            <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
+              {heroImages.map((src, index) => (
+                <Image 
+                  key={src}
+                  src={src} 
+                  alt={`Abon Nusantara Premium ${index + 1}`} 
+                  fill 
+                  className={`object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ))}
             </div>
           </div>
 
