@@ -102,21 +102,64 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div ref={imageRef} className="relative h-[400px] md:h-[600px] w-full mt-8 md:mt-0">
-            <div className="absolute inset-0 bg-blue-200 rounded-3xl rotate-3 transform origin-bottom-left opacity-30"></div>
-            <div className="absolute inset-0 bg-sky-200 rounded-3xl -rotate-2 transform origin-bottom-right opacity-30"></div>
-            <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
-              {heroImages.map((src, index) => (
-                <Image 
-                  key={src}
-                  src={src} 
-                  alt={`Abon Nusantara Premium ${index + 1}`} 
-                  fill 
-                  className={`object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
-                  priority={index === 0}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              ))}
+          <div ref={imageRef} className="relative h-[400px] md:h-[600px] w-full mt-8 md:mt-0 perspective-1000">
+            <div className="absolute inset-0 bg-blue-200 rounded-3xl rotate-3 transform origin-bottom-left opacity-30 z-0"></div>
+            <div className="absolute inset-0 bg-sky-200 rounded-3xl -rotate-2 transform origin-bottom-right opacity-30 z-0"></div>
+            <div className="relative w-full h-full">
+              {heroImages.map((src, index) => {
+                const diff = (index - currentImageIndex + heroImages.length) % heroImages.length;
+                let zIndex = 30;
+                let transform = 'translateY(0) scale(1)';
+                let opacity = 1;
+
+                if (diff === 0) {
+                  // Kartu paling depan
+                  zIndex = 30;
+                  transform = 'translateY(0) scale(1)';
+                  opacity = 1;
+                } else if (diff === 1) {
+                  // Kartu ke-2
+                  zIndex = 20;
+                  transform = 'translateY(24px) scale(0.95)';
+                  opacity = 0.8;
+                } else if (diff === 2) {
+                  // Kartu ke-3
+                  zIndex = 10;
+                  transform = 'translateY(48px) scale(0.9)';
+                  opacity = 0.5;
+                } else if (diff === heroImages.length - 1) {
+                  // Kartu yang baru saja bergeser (pergi ke belakang)
+                  zIndex = 40;
+                  transform = 'translateY(-80px) scale(1.05)';
+                  opacity = 0;
+                } else {
+                  // Kartu lainnya yang tersembunyi di belakang
+                  zIndex = 0;
+                  transform = 'translateY(72px) scale(0.85)';
+                  opacity = 0;
+                }
+
+                return (
+                  <div
+                    key={src}
+                    className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
+                    style={{
+                      zIndex,
+                      transform,
+                      opacity
+                    }}
+                  >
+                    <Image 
+                      src={src} 
+                      alt={`Abon Nusantara Premium ${index + 1}`} 
+                      fill 
+                      className="object-cover"
+                      priority={index === 0}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 
