@@ -9,8 +9,7 @@ export const products: Product[] = [
     price: 35000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-sapi-original-1/600/400",
-      "https://picsum.photos/seed/abon-sapi-original-2/600/400"
+      "/image/abon_sapi_original.png"
     ],
     category: "Abon Sapi",
     spiceLevel: 0,
@@ -32,8 +31,7 @@ export const products: Product[] = [
     price: 38000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-sapi-pedas-1/600/400",
-      "https://picsum.photos/seed/abon-sapi-pedas-2/600/400"
+      "/image/abon_sapi_pedas.png"
     ],
     category: "Abon Sapi",
     spiceLevel: 4,
@@ -54,8 +52,7 @@ export const products: Product[] = [
     price: 30000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-ayam-original-1/600/400",
-      "https://picsum.photos/seed/abon-ayam-original-2/600/400"
+      "/image/abon_ayam_original.png"
     ],
     category: "Abon Ayam",
     spiceLevel: 0,
@@ -75,8 +72,7 @@ export const products: Product[] = [
     price: 42000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-ikan-tuna-1/600/400",
-      "https://picsum.photos/seed/abon-ikan-tuna-2/600/400"
+      "/image/abon_ikan_tuna.png"
     ],
     category: "Abon Ikan",
     spiceLevel: 1,
@@ -97,8 +93,7 @@ export const products: Product[] = [
     price: 36000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-sapi-manis-1/600/400",
-      "https://picsum.photos/seed/abon-sapi-manis-2/600/400"
+      "/image/abon_sapi_manis.png"
     ],
     category: "Abon Sapi",
     spiceLevel: 0,
@@ -118,8 +113,7 @@ export const products: Product[] = [
     price: 33000,
     weight: "100g",
     images: [
-      "https://picsum.photos/seed/abon-ayam-pedas-1/600/400",
-      "https://picsum.photos/seed/abon-ayam-pedas-2/600/400"
+      "/image/abon_ayam_pedas.png"
     ],
     category: "Abon Ayam",
     spiceLevel: 3,

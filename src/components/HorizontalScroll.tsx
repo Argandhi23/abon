@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export default function HorizontalScroll() {
-  const product = { id: "3", name: "Abon Ikan Tuna", price: "Rp 80.000", image: "https://picsum.photos/seed/abon3/800/800" };
+  const product = { id: "abon-ikan-tuna", name: "Abon Ikan Tuna", price: "Rp 80.000", image: "/image/abon_ikan_tuna.png" };
 
   return (
     <section className="relative bg-slate-50 py-24 flex items-center overflow-hidden">

@@ -90,7 +90,7 @@ export default function HeroSection() {
             <div className="absolute inset-0 bg-sky-200 rounded-3xl -rotate-2 transform origin-bottom-right opacity-30"></div>
             <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
               <Image 
-                src="https://picsum.photos/seed/abonhero/800/1000" 
+                src="/image/hero.png" 
                 alt="Abon Nusantara Premium" 
                 fill 
                 className="object-cover"
