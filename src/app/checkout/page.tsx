@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ShoppingBag } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShoppingBag, Copy, CopyCheck, MessageSquare, AlertCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import gsap from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
@@ -14,6 +14,8 @@ export default function CheckoutPage() {
   const successRef = useRef<HTMLDivElement>(null);
   const checkPathRef = useRef<SVGPathElement>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState<any | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useGSAP(() => {
     if (!isSuccess) {
@@ -72,6 +74,32 @@ export default function CheckoutPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const formData = new FormData(e.target as HTMLFormElement);
+    const orderData = {
+      id: Math.random().toString(36).substr(2, 9),
+      date: new Date().toISOString(),
+      customer: {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        address: formData.get('address'),
+        city: formData.get('city'),
+        postalCode: formData.get('postalCode'),
+      },
+      paymentMethod: formData.get('payment'),
+      items: state.items,
+      subtotal: state.total,
+      shipping: 15000,
+      total: state.total + 15000,
+      status: 'pending'
+    };
+
+    // Save to localStorage
+    const existingOrders = JSON.parse(localStorage.getItem('abon_orders') || '[]');
+    localStorage.setItem('abon_orders', JSON.stringify([orderData, ...existingOrders]));
+    setPlacedOrder(orderData);
+
     // Simulate API call
     setTimeout(() => {
       setIsSuccess(true);
@@ -87,31 +115,134 @@ export default function CheckoutPage() {
     }).format(price);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText("085806912873");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (isSuccess) {
+    const isDana = placedOrder?.paymentMethod === 'Transfer DANA';
+    const isGopay = placedOrder?.paymentMethod === 'Transfer GoPay';
+    const showTransferDetails = isDana || isGopay;
+
     return (
       <div ref={successRef} className="min-h-[80vh] flex items-center justify-center bg-[#FAFAF9] px-4 py-12">
-        <div className="bg-white rounded-3xl p-10 md:p-16 max-w-lg w-full text-center shadow-xl border border-slate-100">
-          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
-            <svg viewBox="0 0 24 24" className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <path ref={checkPathRef} d="M20 6L9 17l-5-5" />
-            </svg>
-          </div>
+        <div className="bg-white rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-xl border border-slate-100">
           
-          <div className="success-message">
-            <h1 className="text-3xl font-black text-slate-900 mb-4">Pesanan Berhasil!</h1>
-            <p className="text-slate-600 mb-8 leading-relaxed">
-              Terima kasih telah berbelanja di Abon Nusantara. Kami telah mengirimkan email konfirmasi beserta detail pesanan Anda.
-            </p>
-          </div>
-          
-          <div className="success-btn">
-            <Link 
-              href="/products"
-              className="inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
-            >
-              Belanja Lagi
-            </Link>
-          </div>
+          {showTransferDetails ? (
+            <div className="text-center">
+              <div className="flex justify-center mb-6">
+                {isDana ? (
+                  <svg viewBox="0 0 120 40" className="h-10 select-none shadow-sm rounded-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="120" height="40" rx="8" fill="#108EE9"/>
+                    <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="sans-serif">DANA</text>
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 120 40" className="h-10 select-none shadow-sm rounded-lg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="120" height="40" rx="8" fill="#00AED6"/>
+                    <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="sans-serif">gopay</text>
+                  </svg>
+                )}
+              </div>
+
+              <div className="success-message">
+                <h1 className="text-2xl font-black text-slate-900 mb-2">Satu Langkah Lagi!</h1>
+                <p className="text-slate-500 mb-6 text-sm">
+                  Silakan lakukan transfer sesuai dengan nominal ke rekening/e-wallet berikut:
+                </p>
+
+                {/* Transfer Info Card */}
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 text-left mb-6 space-y-4">
+                  <div>
+                    <span className="text-xs text-slate-400 block uppercase font-bold tracking-wider">E-Wallet</span>
+                    <span className="font-bold text-slate-800 text-base">{isDana ? "DANA" : "GoPay"}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-slate-400 block uppercase font-bold tracking-wider">Nomor HP / Akun</span>
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="font-mono text-lg font-bold text-blue-600">085806912873</span>
+                      <button 
+                        onClick={handleCopy}
+                        className="flex items-center text-xs font-bold text-blue-600 hover:bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg transition-all"
+                      >
+                        {copied ? (
+                          <>
+                            <CopyCheck className="w-3.5 h-3.5 mr-1" />
+                            Tersalin
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 mr-1" />
+                            Salin
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="border-t border-slate-200/60 pt-3 flex justify-between items-center">
+                    <div>
+                      <span className="text-xs text-slate-400 block uppercase font-bold tracking-wider">Total Pembayaran</span>
+                      <span className="font-black text-slate-800 text-lg">{formatPrice(placedOrder?.total)}</span>
+                    </div>
+                    <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      Menunggu Transfer
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-100 text-blue-800 rounded-2xl p-4 text-xs leading-relaxed text-left mb-8 flex items-start">
+                  <AlertCircle className="w-5 h-5 text-blue-500 mr-2 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>PENTING:</strong> Setelah melakukan transfer, silakan klik tombol di bawah untuk mengirimkan bukti transfer via WhatsApp ke admin agar pesanan Anda dapat langsung diproses.
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <a 
+                  href={`https://wa.me/6285806912873?text=Halo%20Admin%20AbonLL%2C%20saya%20ingin%20konfirmasi%20pembayaran%20untuk%20pesanan%20ID%20%23${placedOrder?.id?.toUpperCase()}%20sebesar%20${formatPrice(placedOrder?.total)}%20via%20${placedOrder?.paymentMethod}.%20Berikut%20bukti%20transfernya%3A`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full transition-all shadow-lg shadow-green-500/10 flex items-center justify-center text-sm"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Konfirmasi via WhatsApp
+                </a>
+                <Link 
+                  href="/products"
+                  className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-full transition-all text-sm"
+                >
+                  Belanja Lagi
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg viewBox="0 0 24 24" className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path ref={checkPathRef} d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+              
+              <div className="success-message">
+                <h1 className="text-3xl font-black text-slate-900 mb-4">Pesanan Berhasil!</h1>
+                <p className="text-slate-600 mb-8 leading-relaxed">
+                  Terima kasih telah berbelanja di Abon Nusantara. Kami telah menerima pesanan Anda dan akan segera memproses pengirimannya.
+                </p>
+              </div>
+              
+              <div className="success-btn">
+                <Link 
+                  href="/products"
+                  className="inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+                >
+                  Belanja Lagi
+                </Link>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     );
@@ -154,40 +285,40 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Nama Depan</label>
-                  <input required type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Budi" />
+                  <input required name="firstName" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Budi" />
                 </div>
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Nama Belakang</label>
-                  <input required type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Santoso" />
+                  <input required name="lastName" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Santoso" />
                 </div>
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Email</label>
-                  <input required type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="budi@example.com" />
+                  <input required name="email" type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="budi@example.com" />
                 </div>
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Nomor Telepon</label>
-                  <input required type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="081234567890" />
+                  <input required name="phone" type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="081234567890" />
                 </div>
                 <div className="form-field col-span-2">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Alamat Lengkap</label>
-                  <textarea required rows={3} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Jl. Sudirman No. 123, RT 01/RW 02..." />
+                  <textarea required name="address" rows={3} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Jl. Sudirman No. 123, RT 01/RW 02..." />
                 </div>
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Kota/Kabupaten</label>
-                  <input required type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Jakarta Pusat" />
+                  <input required name="city" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="Jakarta Pusat" />
                 </div>
                 <div className="form-field col-span-2 md:col-span-1">
                   <label className="block text-sm font-bold text-slate-700 mb-2">Kode Pos</label>
-                  <input required type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="10220" />
+                  <input required name="postalCode" type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow" placeholder="10220" />
                 </div>
               </div>
 
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">Metode Pembayaran</h2>
               
               <div className="space-y-4 mb-8">
-                {['Transfer Bank (BCA, Mandiri, BNI)', 'Gopay / OVO / Dana', 'Kartu Kredit'].map((method, i) => (
+                {['Bayar Langsung (COD)', 'Transfer DANA', 'Transfer GoPay'].map((method, i) => (
                   <div key={i} className="form-field flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
-                    <input required type="radio" id={`payment-${i}`} name="payment" className="w-5 h-5 text-blue-600 focus:ring-blue-600 border-slate-300" defaultChecked={i === 0} />
+                    <input required type="radio" id={`payment-${i}`} value={method} name="payment" className="w-5 h-5 text-blue-600 focus:ring-blue-600 border-slate-300" defaultChecked={i === 0} />
                     <label htmlFor={`payment-${i}`} className="ml-3 block text-sm font-bold text-slate-700 cursor-pointer w-full">
                       {method}
                     </label>

@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import HeroSection from "@/components/HeroSection";
+import InfoSection from "@/components/InfoSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Testimonials from "@/components/Testimonials";
@@ -47,6 +48,7 @@ export default function Home() {
         <div ref={shape3Ref} className="absolute w-64 h-64 rounded-full bg-indigo-200 opacity-20 blur-3xl bottom-1/3 left-1/3 will-change-transform"></div>
       </div>
       <HeroSection />
+      <InfoSection />
       <FeaturesSection />
       <HorizontalScroll />
       <FeaturedProducts />

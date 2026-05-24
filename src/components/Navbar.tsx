@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import gsap from "../lib/gsap";
@@ -9,12 +10,15 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const { state } = useCart();
   const containerRef = useRef<HTMLElement>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  if (pathname === "/admin") return null;
 
   const links = [
     { name: "Beranda", path: "/" },

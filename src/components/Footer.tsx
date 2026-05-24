@@ -15,7 +15,7 @@ export default function Footer() {
     // Only keeping hover or subtle constant animations if any, removing entrance animations that hide the footer
   }, { scope: containerRef });
 
-  if (pathname === '/cart' || pathname === '/checkout') {
+  if (pathname === '/cart' || pathname === '/checkout' || pathname === '/admin') {
     return null;
   }
 
@@ -51,8 +51,8 @@ export default function Footer() {
             <h3 className="text-white text-lg font-semibold mb-6">Layanan</h3>
             <ul className="space-y-4">
               <li><Link href="#" className="hover:text-blue-600 transition-colors">Tentang Kami</Link></li>
-              <li><Link href="#" className="hover:text-blue-600 transition-colors">Cara Pemesanan</Link></li>
-              <li><Link href="#" className="hover:text-blue-600 transition-colors">Pengiriman</Link></li>
+              <li><Link href="/#cara-pemesanan" className="hover:text-blue-600 transition-colors">Cara Pemesanan</Link></li>
+              <li><Link href="/#pengiriman" className="hover:text-blue-600 transition-colors">Pengiriman</Link></li>
               <li><Link href="#" className="hover:text-blue-600 transition-colors">FAQ</Link></li>
             </ul>
           </div>
@@ -77,14 +77,7 @@ export default function Footer() {
             
             <h3 className="text-white text-lg font-semibold mb-4">Sosial Media</h3>
             <div className="flex space-x-4">
-              <a href="#" className="social-icon w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-blue-600 transition-colors">
-                <Camera className="w-5 h-5" />
-              </a>
-              <a href="#" className="social-icon w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-blue-600 transition-colors">
-                <Share2 className="w-5 h-5" />
-              </a>
-              <a href="#" className="social-icon w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-blue-600 transition-colors">
-                {/* TikTok icon doesn't exist in basic lucide-react, using MessageCircle as placeholder for WA/Tiktok */}
+              <a href="https://wa.me/6285806912873" target="_blank" rel="noopener noreferrer" className="social-icon w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-green-500 transition-colors">
                 <MessageCircle className="w-5 h-5" />
               </a>
             </div>
