@@ -68,8 +68,8 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
           <div className="text-left pt-10 md:pt-0">
-            <h1 ref={titleRef} className="text-5xl md:text-7xl font-display italic font-bold text-slate-900 tracking-tight leading-tight mb-6" style={{ perspective: "1000px" }}>
-              Abon Artisan Premium, Dibuat dengan Cinta
+            <h1 ref={titleRef} className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-tight mb-6" style={{ perspective: "1000px" }}>
+              Abon Premium, Dibuat dengan Cinta
             </h1>
             <p ref={subtitleRef} className="text-lg md:text-xl text-slate-600 mb-8 max-w-lg leading-relaxed">
               Nikmati kelezatan abon asli dengan resep tradisional warisan nusantara. Tanpa pengawet, tinggi protein, dan pastinya bikin ketagihan.

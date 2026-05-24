@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "AbonLL | Cita Rasa Nusantara",
-  description: "Abon artisan premium, dibuat dengan cinta menggunakan bahan-bahan pilihan terbaik.",
+  description: "Abon premium, dibuat dengan cinta menggunakan bahan-bahan pilihan terbaik.",
 };
 
 export default function RootLayout({

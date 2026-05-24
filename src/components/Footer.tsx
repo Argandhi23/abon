@@ -30,8 +30,8 @@ export default function Footer() {
               <span className="text-3xl font-bold text-blue-600 tracking-tight">Abon</span>
               <span className="text-3xl font-bold text-white tracking-tight">LL</span>
             </Link>
-            <p className="mb-6 leading-relaxed text-slate-400">
-              Cita Rasa Nusantara, Lezat di Setiap Suapan. Kami menyajikan abon artisan premium yang dibuat dengan cinta menggunakan bahan-bahan pilihan terbaik.
+            <p className="text-slate-400 leading-relaxed text-sm max-w-sm">
+              Cita Rasa Nusantara, Lezat di Setiap Suapan. Kami menyajikan abon premium yang dibuat dengan cinta menggunakan bahan-bahan pilihan terbaik.
             </p>
           </div>
 
